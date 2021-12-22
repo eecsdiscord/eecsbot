@@ -1,8 +1,9 @@
-import './lib/init'
 import { LogLevel, SapphireClient } from '@sapphire/framework'
 
+import './lib/init'
+
 const client = new SapphireClient({
-	defaultPrefix: '>',
+	defaultPrefix: '$',
 	intents: [
 		'GUILDS',
 		'GUILD_MESSAGES',

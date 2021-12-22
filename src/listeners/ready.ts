@@ -1,12 +1,14 @@
 import { Events, Listener, Store } from '@sapphire/framework'
 import { blue, gray, magenta, yellow } from 'colorette'
 
+import { initServices } from '../lib/init'
+
 export class BotEvent extends Listener<typeof Events.ClientReady> {
 	public constructor(context: Listener.Context, options: Listener.Options) {
 		super(context, { ...options, event: Events.ClientReady, once: true })
 	}
 
-	public run() {
+	printInfo() {
 		const { logger, stores } = this.container
 		const storeValues = [...stores.values()]
 		const lastStore = storeValues.pop()!
@@ -19,5 +21,10 @@ export class BotEvent extends Listener<typeof Events.ClientReady> {
 		storeValues.forEach((store: Store<any>) => styleStore(store, false))
 		styleStore(lastStore, true)
 		console.log()
+	}
+
+	public run() {
+		this.printInfo()
+		initServices()
 	}
 }
