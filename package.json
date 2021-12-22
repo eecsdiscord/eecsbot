@@ -1,0 +1,27 @@
+{
+  "name": "eecsbot",
+  "version": "2.0.0",
+  "license": "ISC",
+  "author": "feefs",
+  "main": "./dist/bot.js",
+  "scripts": {
+    "build": "rm -rf ./dist && tsc",
+    "dev": "tsc-watch --onSuccess \"node ./dist/bot.js\"",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "serve": "node ./dist/bot.js"
+  },
+  "dependencies": {
+    "@sapphire/framework": "^2.2.0",
+    "@sapphire/plugin-logger": "^2.1.1",
+    "colorette": "^2.0.16",
+    "discord.js": "^13.3.1",
+    "dotenv": "^10.0.0"
+  },
+  "devDependencies": {
+    "@sapphire/prettier-config": "^1.2.7",
+    "@sapphire/ts-config": "^3.1.6",
+    "prettier": "^2.5.1",
+    "tsc-watch": "^4.5.0",
+    "typescript": "^4.5.2"
+  }
+}

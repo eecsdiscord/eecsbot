@@ -1,0 +1,11 @@
+{
+  "extends": "@sapphire/ts-config",
+  "compilerOptions": {
+    "lib": ["es2021"],
+    "target": "es2021",
+    "tsBuildInfoFile": "dist/.tsbuildinfo",
+    "rootDir": "src",
+    "outDir": "dist",
+  },
+  "include": ["src"]
+}
