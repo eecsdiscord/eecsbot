@@ -4,8 +4,8 @@ import { blue, gray, magenta, yellow } from 'colorette'
 import { initServices } from '../lib/init'
 
 export class BotEvent extends Listener<typeof Events.ClientReady> {
-	constructor(context: Listener.Context) {
-		super(context, { event: Events.ClientReady, once: true })
+	constructor(context: Listener.Context, options: Listener.Options) {
+		super(context, { ...options, event: Events.ClientReady, once: true })
 	}
 
 	printInfo() {
@@ -23,8 +23,8 @@ export class BotEvent extends Listener<typeof Events.ClientReady> {
 		console.log()
 	}
 
-	run() {
+	async run() {
 		this.printInfo()
-		initServices()
+		await initServices()
 	}
 }
