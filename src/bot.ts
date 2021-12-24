@@ -3,6 +3,7 @@ import { LogLevel, SapphireClient } from '@sapphire/framework'
 import './lib/init'
 
 const client = new SapphireClient({
+	typing: true,
 	defaultPrefix: '$',
 	intents: [
 		'GUILDS',
