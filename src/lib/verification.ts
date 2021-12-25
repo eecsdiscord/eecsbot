@@ -1,4 +1,4 @@
-import type { ILogger } from '@sapphire/framework'
+import { container } from '@sapphire/framework'
 import { green, red } from 'colorette'
 import crypto from 'crypto'
 import { Message, MessageEmbed } from 'discord.js'
@@ -10,7 +10,7 @@ import type { Verification } from './interfaces'
 let transporter: nodemailer.Transporter
 const codes: { [key: string]: Verification } = {}
 
-export async function initializeNodemailer(logger: ILogger) {
+export async function initializeNodemailer() {
 	transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
@@ -18,10 +18,10 @@ export async function initializeNodemailer(logger: ILogger) {
 
 	try {
 		await transporter.verify()
-		logger.info(green('Nodemailer initialized!'))
+		container.logger.info(green('Nodemailer initialized!'))
 	} catch (error) {
-		logger.error(red('Nodemailer initialization failed!'))
-		logger.error(error)
+		container.logger.error(red('Nodemailer initialization failed!'))
+		container.logger.error(error)
 	}
 }
 
@@ -30,6 +30,7 @@ export async function emailCode(message: Message, bMailUsername: string) {
 	const code = Math.floor(Math.random() * 1_000_000)
 	const email = `${bMailUsername}@${BMAIL_DOMAIN}`
 	try {
+		if (!process.env.PEPPER) throw 'PEPPER ENV VARIABLE MISSING'
 		await transporter.sendMail({
 			from: 'bot@eecsdiscord.berkeley.edu',
 			to: email,
@@ -37,7 +38,6 @@ export async function emailCode(message: Message, bMailUsername: string) {
 			text: `Please use the code ${code} to complete your verification. This code will expire in 5 minutes!`
 		})
 
-		if (!process.env.PEPPER) throw 'PEPPER ENV VARIABLE MISSING'
 		const hash = crypto
 			.createHash('sha256')
 			.update(process.env.PEPPER + email)
@@ -51,7 +51,7 @@ export async function emailCode(message: Message, bMailUsername: string) {
 
 		success = true
 	} catch (error) {
-		console.log(error)
+		container.logger.error(error)
 	}
 
 	return success

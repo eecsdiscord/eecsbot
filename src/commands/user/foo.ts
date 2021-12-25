@@ -6,7 +6,7 @@ export class UserCommand extends Command {
 		super(context, { ...options, name: 'foo' })
 	}
 
-	async messageRun(message: Message) {
-		return message.reply('bar')
+	async messageRun(message: Message): Promise<Message> {
+		return await message.reply('bar')
 	}
 }

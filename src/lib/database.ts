@@ -1,4 +1,4 @@
-import type { ILogger } from '@sapphire/framework'
+import { container } from '@sapphire/framework'
 import BetterSqlite3 from 'better-sqlite3'
 import { blue, green, red, yellow } from 'colorette'
 
@@ -19,16 +19,16 @@ function initializeTables() {
 	db.prepare('CREATE TABLE IF NOT EXISTS verification_hashes (hash TEXT, timestamp INTEGER)').run()
 }
 
-export async function initializeBetterSqlite3(logger: ILogger) {
+export async function initializeBetterSqlite3() {
 	if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR)
 	try {
 		db = BetterSqlite3(DB_FILE, {
-			verbose: (message) => logger.info(`${blue('SQLite3')} - ${yellow(message)}`)
+			verbose: (message) => container.logger.info(`${blue('SQLite3')} - ${yellow(message)}`)
 		})
 		initializeDatabase()
-		logger.info(green('SQLite3 database initialized!'))
+		container.logger.info(green('SQLite3 database initialized!'))
 	} catch (error) {
-		logger.error(red('SQLite3 database initialization failed!'))
-		logger.error(error)
+		container.logger.error(red('SQLite3 database initialization failed!'))
+		container.logger.error(error)
 	}
 }
