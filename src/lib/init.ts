@@ -6,7 +6,7 @@ import { initializeNodemailer } from './verification'
 
 export async function initServices() {
 	await initializeNodemailer()
-	await initializeBetterSqlite3()
+	initializeBetterSqlite3()
 }
 
 dotenv.config()

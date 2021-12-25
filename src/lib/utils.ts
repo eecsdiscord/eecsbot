@@ -17,12 +17,7 @@ export function pickRandom<T>(array: T[]): T {
  */
 export async function sendLoadingMessage(message: Message): Promise<Message> {
 	return message.channel.send({
-		embeds: [
-			new MessageEmbed({
-				description: pickRandom(LOADING_MESSAGES),
-				color: pickRandom([BERKELEY_BLUE, CALIFORNIA_GOLD])
-			})
-		]
+		embeds: [new MessageEmbed({ description: pickRandom(LOADING_MESSAGES), color: pickRandom([BERKELEY_BLUE, CALIFORNIA_GOLD]) })]
 	})
 }
 

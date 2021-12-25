@@ -25,7 +25,7 @@ export async function initializeNodemailer() {
 	}
 }
 
-export async function emailCode(message: Message, bMailUsername: string) {
+export async function emailCode(message: Message, bMailUsername: string): Promise<MessageEmbed> {
 	let success = false
 	const code = Math.floor(Math.random() * 1_000_000)
 	const email = `${bMailUsername}@${BMAIL_DOMAIN}`
