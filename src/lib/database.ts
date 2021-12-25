@@ -9,7 +9,7 @@ import { ROOT_DIR } from './constants'
 const DB_DIR = join(ROOT_DIR, 'db')
 const DB_FILE = join(DB_DIR, 'data.db')
 
-let db: BetterSqlite3.Database
+export let db: BetterSqlite3.Database
 
 function initializeDatabase() {
 	initializeTables()

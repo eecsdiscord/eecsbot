@@ -7,6 +7,6 @@ export class UserCommand extends Command {
 	}
 
 	async messageRun(message: Message): Promise<Message> {
-		return await message.reply('bar')
+		return message.reply('bar')
 	}
 }

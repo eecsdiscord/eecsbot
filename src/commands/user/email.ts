@@ -19,6 +19,6 @@ export class UserCommand extends Command {
 
 		const loadingMessage = await sendLoadingMessage(message)
 		const resultMessage = await emailCode(message, bMailUsername)
-		return await loadingMessage.edit({ embeds: [resultMessage] })
+		return loadingMessage.edit({ embeds: [resultMessage] })
 	}
 }
