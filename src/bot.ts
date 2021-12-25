@@ -14,7 +14,8 @@ const client = new SapphireClient({
 		// 'GUILD_EMOJIS_AND_STICKERS'
 	],
 	partials: ['CHANNEL'],
-	logger: { level: LogLevel.Debug }
+	logger: { level: LogLevel.Debug },
+	loadDefaultErrorListeners: false
 })
 
 const main = async () => {
