@@ -7,12 +7,12 @@ import { emailCode } from '../../lib/verification'
 
 const HELP_ERROR = new UserError({
 	identifier: 'ArgumentError',
-	context: { help: true, helpMessage: '> Please enter a valid Berkeley email! Example: `$email foo@berkeley.edu`' }
+	context: { help: true, helpMessage: 'Please enter a valid Berkeley email! Example: `$email foo@berkeley.edu`' }
 })
 
 export class UserCommand extends Command {
 	constructor(context: Command.Context, options: Command.Options) {
-		super(context, { ...options, name: 'email', cooldownDelay: 15_000, preconditions: ['DMOnly'] })
+		super(context, { ...options, name: 'email', cooldownDelay: 15_000, preconditions: ['DMOnly', 'isNotVerified'] })
 	}
 
 	async messageRun(message: Message, args: Args): Promise<Message> {
