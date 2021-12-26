@@ -1,5 +1,4 @@
-import { CommandErrorPayload, Events } from '@sapphire/framework'
-import { Listener, UserError } from '@sapphire/framework'
+import { CommandErrorPayload, Events, Listener, UserError } from '@sapphire/framework'
 
 export class UserEvent extends Listener<typeof Events.CommandError> {
 	constructor(context: Listener.Context, options: Listener.Options) {

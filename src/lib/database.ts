@@ -23,7 +23,7 @@ export function initializeBetterSqlite3() {
 	if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR)
 	try {
 		db = BetterSqlite3(DB_FILE, {
-			verbose: (message) => container.logger.info(`${blue('SQLite3')} - ${yellow(message)}`)
+			verbose: (message) => container.logger.info(`[${blue('SQLite3')}] - ${yellow(message)}`)
 		})
 		initializeDatabase()
 		container.logger.info(green('SQLite3 database initialized!'))
