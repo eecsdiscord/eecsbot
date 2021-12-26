@@ -19,8 +19,9 @@ export class KernelCommand extends Command {
 		if (!codeResult.success) return await message.channel.send(HELP_MESSAGE)
 		const async = args.getFlags('async')
 		const depth = Number(args.getOption('depth')) ?? 0
+		const parsedCommand = `$eval ${async ? '--async ' : ''}${depth > 0 ? `--depth=${depth} ` : ''}${codeResult.value}`
 
-		const code = async ? `(async () => {\n${codeResult.value}\n})();` : codeResult.value
+		const code = async ? `return (async () => {\n${codeResult.value}\n})();` : codeResult.value
 		let result = null
 		try {
 			const evaluated = await Function('container, db, codes', `${code}`)(this.container, DB, codes)
@@ -28,13 +29,13 @@ export class KernelCommand extends Command {
 			result = inspect(evaluated, { depth: depth })
 		} catch (error) {
 			if (error && error instanceof Error && error.stack) {
-				this.container.client.logger.error(error)
+				this.container.logger.error(error)
 			}
 			result = error
 		}
 
 		const output = inspect(result, { depth: depth })
-		const resultMessage = `\`\`\`js\n${result}\`\`\``
+		const resultMessage = `**Parsed code:**\n\`\`\`js\n${parsedCommand}\`\`\`**Result:**\n\`\`\`js\n${result}\`\`\``
 		if (resultMessage.length > 2000) {
 			return await message.channel.send({
 				content: 'Output was too long, sending the result as a file!',

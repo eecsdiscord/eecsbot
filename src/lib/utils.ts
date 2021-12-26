@@ -1,5 +1,17 @@
-import { Message, MessageEmbed } from 'discord.js'
-import { BERKELEY_BLUE, BMAIL_DOMAIN, CALIFORNIA_GOLD, LOADING_MESSAGES } from './constants'
+import { container } from '@sapphire/framework'
+import { Guild, Message, MessageEmbed } from 'discord.js'
+
+import { BERKELEY_BLUE, BMAIL_DOMAIN, CALIFORNIA_GOLD, GUILD_ID, LOADING_MESSAGES } from './constants'
+
+/**
+ * Returns the Guild
+ * @returns A Guild
+ */
+export function getGuild(): Guild {
+	const result = container.client.guilds.resolve(GUILD_ID)
+	if (!result) throw 'Unable to resolve GUILD_ID to the Guild!'
+	return result
+}
 
 /**
  * Returns a random item from an array
@@ -16,7 +28,7 @@ export function pickRandom<T>(array: T[]): T {
  * @returns Sent Discord.js message
  */
 export async function sendLoadingMessage(message: Message): Promise<Message> {
-	return message.channel.send({
+	return await message.channel.send({
 		embeds: [new MessageEmbed({ description: pickRandom(LOADING_MESSAGES), color: pickRandom([BERKELEY_BLUE, CALIFORNIA_GOLD]) })]
 	})
 }

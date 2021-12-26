@@ -1,6 +1,7 @@
 import { Args, Command, UserError } from '@sapphire/framework'
-import type { Message } from 'discord.js'
+import { Message, MessageEmbed } from 'discord.js'
 
+import { ERROR_RED, SUCCESS_GREEN } from '../../lib/constants'
 import { extractbMailUsername, sendLoadingMessage } from '../../lib/utils'
 import { emailCode } from '../../lib/verification'
 
@@ -22,7 +23,21 @@ export class UserCommand extends Command {
 		if (bMailUsername === '' || !args.finished) throw HELP_ERROR
 
 		const loadingMessage = await sendLoadingMessage(message)
-		const resultMessage = await emailCode(message, bMailUsername)
-		return await loadingMessage.edit({ embeds: [resultMessage] })
+		const result = await emailCode(message.author, bMailUsername)
+
+		return await loadingMessage.edit({
+			embeds: [
+				result
+					? new MessageEmbed({
+							title: 'Email sent!',
+							description:
+								`Verification code successfully sent for \`${message.author.tag}\`\n\n` +
+								'Once you receive your temporary verification code, please verify using\n' +
+								`\`$code ******\``,
+							color: SUCCESS_GREEN
+					  })
+					: new MessageEmbed({ title: 'Error sending email!', color: ERROR_RED })
+			]
+		})
 	}
 }
