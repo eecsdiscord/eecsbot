@@ -1,7 +1,7 @@
 import { container } from '@sapphire/framework'
 import { Guild, Message, MessageEmbed } from 'discord.js'
 
-import { BERKELEY_BLUE, BMAIL_DOMAIN, CALIFORNIA_GOLD, LOADING_MESSAGES } from './constants'
+import { BERKELEY_BLUE, CALIFORNIA_GOLD, LOADING_MESSAGES } from './constants'
 import { GUILD_ID } from './discordConfig'
 
 /**
@@ -32,18 +32,4 @@ export async function sendLoadingMessage(message: Message): Promise<Message> {
 	return await message.channel.send({
 		embeds: [new MessageEmbed({ description: pickRandom(LOADING_MESSAGES), color: pickRandom([BERKELEY_BLUE, CALIFORNIA_GOLD]) })]
 	})
-}
-
-/**
- * Extracts the bMail username from an email. Removes periods, ignores + extensions, and lowercases
- * @param email Email string
- * @returns bMail username
- */
-export function extractbMailUsername(email: string): string {
-	const splitted = email.split('@')
-	if (splitted.length !== 2) return ''
-	const [username, domain] = splitted
-	if (domain !== BMAIL_DOMAIN) return ''
-
-	return username.replaceAll('.', '').split('+')[0].toLowerCase()
 }

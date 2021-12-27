@@ -25,13 +25,23 @@ export class KernelCommand extends SubCommandPluginCommand {
 		})
 	}
 
+	/**
+	 * Returns a CategoryChannel array corresponding to the course categories
+	 * @returns CategoryChannel array
+	 */
+	getCourseCategories(): CategoryChannel[] {
+		return CLASS_CATEGORY_CHANNEL_IDS.map((id: string) => getGuild().channels.resolve(id) as CategoryChannel)
+	}
+
 	async list(message: Message, args: Args): Promise<Message> {
 		if (!args.finished) throw HELP_LIST_ERROR
-		const result = CLASS_CATEGORY_CHANNEL_IDS.map((id: string) =>
-			(getGuild().channels.resolve(id) as CategoryChannel | null)?.children
-				.sorted((a, b) => (a.name.match(COURSE_NUMBER_REGEX)?.[0] || '').localeCompare(b.name.match(COURSE_NUMBER_REGEX)?.[0] || ''))
-				.map((channel) => channel.toString())
-		).join('\n')
+		const result = this.getCourseCategories()
+			.map((category: CategoryChannel) =>
+				category.children
+					.sorted((a, b) => (a.name.match(COURSE_NUMBER_REGEX)?.[0] || '').localeCompare(b.name.match(COURSE_NUMBER_REGEX)?.[0] || ''))
+					.map((channel) => channel.toString())
+			)
+			.join('\n')
 		return await message.channel.send(result)
 	}
 
