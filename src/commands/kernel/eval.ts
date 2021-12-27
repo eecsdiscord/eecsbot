@@ -14,7 +14,7 @@ import { codes } from '../../lib/verification'
 
 export class KernelCommand extends Command {
 	constructor(context: Command.Context, options: Command.Options) {
-		super(context, { ...options, name: 'eval', flags: ['async'], options: ['depth'], preconditions: ['ownerOnly', 'DMOnly'] })
+		super(context, { ...options, name: 'eval', flags: ['async'], options: ['depth'], preconditions: ['isOwner', 'DMOnly'] })
 	}
 
 	async messageRun(message: Message, args: Args): Promise<Message> {

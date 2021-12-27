@@ -1,7 +1,8 @@
 import { Args, Command, UserError } from '@sapphire/framework'
 import { Message, MessageEmbed } from 'discord.js'
 
-import { ERROR_RED, SUCCESS_GREEN, VERIFIED_ROLE_ID } from '../../lib/constants'
+import { ERROR_RED, SUCCESS_GREEN } from '../../lib/constants'
+import { VERIFIED_ROLE_ID } from '../../lib/discordConfig'
 import { getGuild, sendLoadingMessage } from '../../lib/utils'
 import { verifyCode } from '../../lib/verification'
 

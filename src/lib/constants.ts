@@ -2,10 +2,8 @@ import { join } from 'path'
 
 export const ROOT_DIR = join(__dirname, '..', '..')
 
-export const GUILD_ID = '485517971452854272'
-export const VERIFIED_ROLE_ID = '715338683179597825'
-
 export const BMAIL_DOMAIN = 'berkeley.edu'
+export const COURSE_NUMBER_REGEX = /\d+/
 
 export const BERKELEY_BLUE = '#003262'
 export const CALIFORNIA_GOLD = '#FDB515'

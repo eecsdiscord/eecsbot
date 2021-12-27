@@ -1,14 +1,17 @@
 import { Precondition, PreconditionResult } from '@sapphire/framework'
 import type { Message } from 'discord.js'
 
+import { MOD_ROLE_ID } from '../lib/discordConfig'
+import { getGuild } from '../lib/utils'
+
 export class UserPrecondition extends Precondition {
 	run(message: Message): PreconditionResult {
-		return process.env.BOT_OWNER_ID && message.author.id === process.env.BOT_OWNER_ID ? this.ok() : this.error({ context: { silent: true } })
+		return getGuild().members.resolve(message.author.id)?.roles.resolve(MOD_ROLE_ID) ? this.ok() : this.error({ context: { silent: true } })
 	}
 }
 
 declare module '@sapphire/framework' {
 	interface Preconditions {
-		ownerOnly: never
+		isMod: never
 	}
 }

@@ -1,19 +1,17 @@
 import { Precondition, PreconditionResult } from '@sapphire/framework'
 import type { Message } from 'discord.js'
 
-import { VERIFIED_ROLE_ID } from '../lib/discordConfig'
+import { TA_ROLE_ID } from '../lib/discordConfig'
 import { getGuild } from '../lib/utils'
 
 export class UserPrecondition extends Precondition {
 	run(message: Message): PreconditionResult {
-		return getGuild().members.resolve(message.author.id)?.roles.resolve(VERIFIED_ROLE_ID)
-			? this.error({ message: 'You are already verified!' })
-			: this.ok()
+		return getGuild().members.resolve(message.author.id)?.roles.resolve(TA_ROLE_ID) ? this.ok() : this.error({ context: { silent: true } })
 	}
 }
 
 declare module '@sapphire/framework' {
 	interface Preconditions {
-		isNotVerified: never
+		isTA: never
 	}
 }

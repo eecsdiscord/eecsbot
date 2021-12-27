@@ -1,7 +1,8 @@
 import { container } from '@sapphire/framework'
 import { Guild, Message, MessageEmbed } from 'discord.js'
 
-import { BERKELEY_BLUE, BMAIL_DOMAIN, CALIFORNIA_GOLD, GUILD_ID, LOADING_MESSAGES } from './constants'
+import { BERKELEY_BLUE, BMAIL_DOMAIN, CALIFORNIA_GOLD, LOADING_MESSAGES } from './constants'
+import { GUILD_ID } from './discordConfig'
 
 /**
  * Returns the Guild
