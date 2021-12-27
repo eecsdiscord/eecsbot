@@ -6,7 +6,6 @@ import { GUILD_ID } from './discordConfig'
 
 /**
  * Returns the Guild
- * @returns A Guild
  */
 export function getGuild(): Guild {
 	const result = container.client.guilds.resolve(GUILD_ID)
@@ -15,9 +14,8 @@ export function getGuild(): Guild {
 }
 
 /**
- * Returns a random item from an array
+ * Picks a random item from an array
  * @param array Array to pick an item from
- * @returns A randomly picked item
  */
 export function pickRandom<T>(array: T[]): T {
 	return array[Math.floor(Math.random() * array.length)]
@@ -26,7 +24,6 @@ export function pickRandom<T>(array: T[]): T {
 /**
  * Sends an embed with a loading message
  * @param message Discord.js message
- * @returns Sent Discord.js message
  */
 export async function sendLoadingMessage(message: Message): Promise<Message> {
 	return await message.channel.send({
