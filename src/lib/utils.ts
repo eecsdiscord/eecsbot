@@ -1,8 +1,8 @@
 import { container } from '@sapphire/framework'
-import { Guild, Message, MessageEmbed } from 'discord.js'
+import { Guild, Message, MessageEmbed, TextChannel } from 'discord.js'
 
 import { BERKELEY_BLUE, CALIFORNIA_GOLD, LOADING_MESSAGES } from './constants'
-import { GUILD_ID } from './discordConfig'
+import { GUILD_ID, STDOUT_CHANNEL_ID } from './discordConfig'
 
 /**
  * Returns the Guild
@@ -10,6 +10,15 @@ import { GUILD_ID } from './discordConfig'
 export function getGuild(): Guild {
 	const result = container.client.guilds.resolve(GUILD_ID)
 	if (!result) throw 'Unable to resolve GUILD_ID to the Guild!'
+	return result
+}
+
+/**
+ * Returns the STDOUT Discord channel
+ */
+export function getSTDOUT(): TextChannel {
+	const result = getGuild().channels.resolve(STDOUT_CHANNEL_ID) as TextChannel
+	if (!result) throw 'Unable to resolve STDOUT_CHANNEL_ID to the STDOUT Discord channel!'
 	return result
 }
 

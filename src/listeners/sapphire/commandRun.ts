@@ -8,6 +8,6 @@ export class UserEvent extends Listener<typeof Events.CommandRun> {
 	}
 
 	async run(message: Message, command: Command, _: CommandRunPayload) {
-		this.container.logger.debug(`[${command.constructor.name}] - (${cyan(command.name)}): ${message.author.tag} [${cyan(message.author.id)}]`)
+		this.container.logger.debug(`[${command.constructor.name}] - (${cyan(command.name)}) ${message.author.tag} [${cyan(message.author.id)}]`)
 	}
 }
