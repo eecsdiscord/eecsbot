@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash -e
 source ~/.nvm/nvm.sh
 nvm use || nvm install
 
