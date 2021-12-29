@@ -18,8 +18,7 @@ jobs:
       with:
         node-version-file: '.nvmrc'
 
-    - name: Install packages
-      run: npm ci
-
-    - name: Build code
-      run: npm run build
+    - name: Install packages and build code
+      run: |
+        npm ci
+        npm run build
