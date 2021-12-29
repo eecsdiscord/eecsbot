@@ -1,0 +1,63 @@
+name: Deployment
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    env:
+      SSH_HOST: apphost.ocf.berkeley.edu
+      SSH_USERNAME: eecsdiscord
+      SSH_PORT: 22
+    steps:
+    - name: Create .env file
+      env:
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        BOT_OWNER_ID: ${{ secrets.BOT_OWNER_ID }}
+        EMAIL_USER: ${{ secrets.EMAIL_USER }}
+        EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+        PEPPER: ${{ secrets.PEPPER }}
+      run: |
+        touch .env
+        echo "BOT_TOKEN=$BOT_TOKEN" >> .env
+        echo "BOT_OWNER_ID=$BOT_OWNER_ID" >> .env
+        echo "EMAIL_USER=$EMAIL_USER" >> .env
+        echo "EMAIL_PASS=$EMAIL_PASS" >> .env
+        echo "PEPPER=$PEPPER" >> .env
+
+    - name: Stop eecsbot and rebuild code
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ env.SSH_PORT }}
+        script: |
+          systemctl --user stop eecsbot
+          cd ./eecsbot
+          git fetch origin master
+          git reset --hard origin/master
+          rm -rf node_modules
+          npm ci
+          npm run build
+
+    - name: Update .env
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ env.SSH_PORT }}
+        source: ".env"
+        target: "./eecsbot/"
+
+    - name: Start eecsbot
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ env.SSH_PORT }}
+        script: systemctl --user start eecsbot
