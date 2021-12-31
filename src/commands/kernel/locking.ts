@@ -29,7 +29,9 @@ const HELP_DOUBLE_ACQUIRE_RELEASE_ERROR = (channel: TextChannel, acquire: boolea
  * Returns a CategoryChannel array corresponding to the course categories
  */
 function getCourseCategories(): CategoryChannel[] {
-	return CLASS_CATEGORY_CHANNEL_IDS.map((id: string) => getGuild().channels.resolve(id) as CategoryChannel)
+	return CLASS_CATEGORY_CHANNEL_IDS.map((id: string) => getGuild()?.channels.resolve(id) || null).filter(
+		(channel): channel is CategoryChannel => channel !== null
+	)
 }
 
 /**
@@ -57,9 +59,11 @@ async function lockAcquireOrRelease(message: Message, args: Args, acquire: boole
 	const locked = isLocked(channel)
 	if ((acquire && locked) || (!acquire && !locked)) throw HELP_DOUBLE_ACQUIRE_RELEASE_ERROR(channel, acquire)
 
+	const stdoutChannel = getSTDOUT()
+
 	channel.permissionOverwrites.edit(getGuild().roles.everyone, { SEND_MESSAGES: acquire ? false : null })
 
-	await getSTDOUT().send({
+	await stdoutChannel.send({
 		embeds: [
 			new MessageEmbed({
 				title: `Lock ${acquire ? 'acquired' : 'released'}!`,

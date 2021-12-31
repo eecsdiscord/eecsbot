@@ -8,18 +8,26 @@ import { GUILD_ID, STDOUT_CHANNEL_ID } from './discordConfig'
  * Returns the Guild
  */
 export function getGuild(): Guild {
-	const result = container.client.guilds.resolve(GUILD_ID)
-	if (!result) throw 'Unable to resolve GUILD_ID to the Guild!'
-	return result
+	const guild = container.client.guilds.resolve(GUILD_ID)
+	if (!guild) {
+		const msg = 'Unable to resolve GUILD_ID to the Guild!'
+		container.logger.error(msg)
+		throw msg
+	}
+	return guild
 }
 
 /**
  * Returns the STDOUT Discord channel
  */
 export function getSTDOUT(): TextChannel {
-	const result = getGuild().channels.resolve(STDOUT_CHANNEL_ID) as TextChannel
-	if (!result) throw 'Unable to resolve STDOUT_CHANNEL_ID to the STDOUT Discord channel!'
-	return result
+	const channel = getGuild().channels.resolve(STDOUT_CHANNEL_ID)
+	if (!channel) {
+		const msg = 'Unable to resolve STDOUT_CHANNEL_ID to a channel!'
+		container.logger.error(msg)
+		throw msg
+	}
+	return channel as TextChannel
 }
 
 /**
