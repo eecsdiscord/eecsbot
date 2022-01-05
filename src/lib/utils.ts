@@ -32,7 +32,7 @@ export function getSTDOUT(): TextChannel {
 
 /**
  * Returns true if the Discord user is a moderator
- * @param id DIscord id of the user
+ * @param id Discord id of the user
  */
 export function isMod(id: string): boolean {
 	return Boolean(getGuild().members.resolve(id)?.roles.resolve(MOD_ROLE_ID))
