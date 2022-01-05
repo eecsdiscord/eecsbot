@@ -2,9 +2,11 @@ import { Args, UserError } from '@sapphire/framework'
 import { SubCommandPluginCommand } from '@sapphire/plugin-subcommands'
 import { CategoryChannel, Message, MessageEmbed, Permissions, TextChannel } from 'discord.js'
 
-import { BERKELEY_BLUE, CALIFORNIA_GOLD, COURSE_NUMBER_REGEX } from '../../lib/constants'
+import { BERKELEY_BLUE, CALIFORNIA_GOLD } from '../../lib/constants'
 import { CLASS_CATEGORY_CHANNEL_IDS } from '../../lib/discordConfig'
 import { getGuild, getSTDOUT } from '../../lib/utils'
+
+const COURSE_NUMBER_REGEX = /\d+/
 
 const HELP_LIST_ERROR = new UserError({
 	identifier: 'ArgumentError',

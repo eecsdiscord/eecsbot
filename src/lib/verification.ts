@@ -6,10 +6,15 @@ import nodemailer from 'nodemailer'
 
 import { BMAIL_DOMAIN } from './constants'
 import { db } from './database'
-import type { Verification } from './interfaces'
+
+export const codes: { [key: string]: Verification } = {}
+
+interface Verification {
+	code: number
+	hash: string
+}
 
 let transporter: nodemailer.Transporter
-export const codes: { [key: string]: Verification } = {}
 
 export async function initializeNodemailer() {
 	transporter = nodemailer.createTransport({

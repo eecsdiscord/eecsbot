@@ -2,15 +2,15 @@ import { Args, Command, UserError } from '@sapphire/framework'
 import type { Message } from 'discord.js'
 
 import { inspect } from 'util'
+import { db as DB } from '../../lib/database'
+import { codes } from '../../lib/verification'
+
+const FALSY_MESSAGE = "> Falsy result, don't forget to add `return` in the last statement!"
 
 const HELP_ERROR = new UserError({
 	identifier: 'ArgumentError',
 	context: { help: true, helpMessage: '> Invalid eval code!' }
 })
-const FALSY_MESSAGE = "> Falsy result, don't forget to add `return` in the last statement!"
-
-import { db as DB } from '../../lib/database'
-import { codes } from '../../lib/verification'
 
 export class KernelCommand extends Command {
 	constructor(context: Command.Context, options: Command.Options) {

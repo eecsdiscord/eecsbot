@@ -2,7 +2,7 @@ import { container } from '@sapphire/framework'
 import { Guild, Message, MessageEmbed, TextChannel } from 'discord.js'
 
 import { BERKELEY_BLUE, CALIFORNIA_GOLD, LOADING_MESSAGES } from './constants'
-import { GUILD_ID, STDOUT_CHANNEL_ID } from './discordConfig'
+import { GUILD_ID, MOD_ROLE_ID, STDOUT_CHANNEL_ID } from './discordConfig'
 
 /**
  * Returns the Guild
@@ -28,6 +28,14 @@ export function getSTDOUT(): TextChannel {
 		throw msg
 	}
 	return channel as TextChannel
+}
+
+/**
+ * Returns true if the Discord user is a moderator
+ * @param id Discord id of the user
+ */
+export function isMod(id: string): boolean {
+	return Boolean(getGuild().members.resolve(id)?.roles.resolve(MOD_ROLE_ID))
 }
 
 /**

@@ -6,18 +6,10 @@ import fs from 'fs'
 import { join } from 'path'
 import { ROOT_DIR } from './constants'
 
-const DB_DIR = join(ROOT_DIR, 'db')
-const DB_FILE = join(DB_DIR, 'data.db')
-
 export let db: BetterSqlite3.Database
 
-function initializeDatabase() {
-	initializeTables()
-}
-
-function initializeTables() {
-	db.prepare('CREATE TABLE IF NOT EXISTS verification_hashes (hash TEXT, timestamp INTEGER)').run()
-}
+const DB_DIR = join(ROOT_DIR, 'db')
+const DB_FILE = join(DB_DIR, 'data.db')
 
 export function initializeBetterSqlite3() {
 	if (!fs.existsSync(DB_DIR)) fs.mkdirSync(DB_DIR)
@@ -31,4 +23,12 @@ export function initializeBetterSqlite3() {
 		container.logger.error(red('SQLite3 database initialization failed!'))
 		container.logger.error(error)
 	}
+}
+
+function initializeDatabase() {
+	initializeTables()
+}
+
+function initializeTables() {
+	db.prepare('CREATE TABLE IF NOT EXISTS verification_hashes (hash TEXT, timestamp INTEGER)').run()
 }
