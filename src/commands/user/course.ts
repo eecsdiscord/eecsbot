@@ -2,7 +2,7 @@ import { fetch } from '@sapphire/fetch'
 import { Args, Command, container, UserError } from '@sapphire/framework'
 import { jaroWinkler } from '@skyra/jaro-winkler'
 import { green } from 'colorette'
-import { Message, MessageEmbed } from 'discord.js'
+import { HexColorString, Message, MessageEmbed } from 'discord.js'
 
 import { BERKELEY_BLUE, CALIFORNIA_GOLD, ERROR_RED } from '../../lib/constants'
 import { isMod, sendLoadingMessage } from '../../lib/utils'
@@ -145,16 +145,15 @@ export async function getCatalog(): Promise<boolean> {
 }
 
 /**
- * Returns a MessageEmbed with subject suggestions
- * @param subject Subject query string
- * @param subjects Matched subjects list
+ * Returns a MessageEmbed with suggestions
+ * @param message Text to display
+ * @param entries jaroWinkler entries
+ * @param color Color for the embed
  */
-function getSuggestionsEmbed(subject: string, subjects: [number, string][]): MessageEmbed {
+function getSuggestionsEmbed(message: string, entries: [number, string][], color: HexColorString): MessageEmbed {
 	return new MessageEmbed({
-		description: `Couldn't find an exact match for subject \`${subject}\`, did you mean:\n${subjects
-			.map((entry) => `\`${entry[1]}\``)
-			.join(' | ')}`,
-		color: CALIFORNIA_GOLD
+		description: `${message}, did you mean:\n${entries.map((entry) => `\`${entry[1]}\``).join(' | ')}`,
+		color: color
 	})
 }
 
@@ -193,13 +192,20 @@ export class UserCommand extends Command {
 		let subjectMatch = subjects[0][1]
 		if (subjectMatch in laymanMappings) subjectMatch = laymanMappings[subjectMatch]
 
+		const courses = Object.keys(catalog[subjectMatch])
+			.map((catalogCourse: string) => [jaroWinkler(course, catalogCourse), catalogCourse] as [number, string])
+			.sort(([a0, a1], [b0, b1]) => b0 - a0 || a1.localeCompare(b1))
+			.slice(0, 5)
+
+		const embeds: MessageEmbed[] = []
+
+		if (!(subject in laymanMappings) && subject !== subjectMatch) {
+			embeds.push(getSuggestionsEmbed(`Couldn't find an exact match for subject \`${subject}\``, subjects, CALIFORNIA_GOLD))
+		}
+
 		if (!(course in catalog[subjectMatch])) {
-			return await loadingMessage.edit({
-				embeds: [
-					new MessageEmbed({ description: `Course \`${course}\` not found in subject \`${subjectMatch}\``, color: ERROR_RED }),
-					getSuggestionsEmbed(subject, subjects)
-				]
-			})
+			embeds.unshift(getSuggestionsEmbed(`Course \`${course}\` not found in subject \`${subjectMatch}\``, courses, ERROR_RED))
+			return await loadingMessage.edit({ embeds: embeds })
 		}
 
 		try {
@@ -221,7 +227,7 @@ export class UserCommand extends Command {
 				lastUpdated = `${date.getMonth()}/${date.getDay()}/${date.getFullYear()}`
 			}
 
-			const embeds = [
+			embeds.unshift(
 				new MessageEmbed({
 					color: BERKELEY_BLUE,
 					title: `${subjectMatch} ${course}`,
@@ -250,11 +256,7 @@ export class UserCommand extends Command {
 					],
 					footer: { text: 'Berkeleytime.com', icon_url: 'https://berkeleytime.com/favicon.png' }
 				})
-			]
-
-			if (!(subject in laymanMappings) && subject !== subjectMatch) {
-				embeds.push(getSuggestionsEmbed(subject, subjects))
-			}
+			)
 
 			return await loadingMessage.edit({ embeds: embeds })
 		} catch (error) {

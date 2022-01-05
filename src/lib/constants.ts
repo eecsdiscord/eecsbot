@@ -9,4 +9,4 @@ export const CALIFORNIA_GOLD = '#FDB515'
 export const ERROR_RED = '#BF616A'
 export const SUCCESS_GREEN = '#A3BE8C'
 
-export const LOADING_MESSAGES = ['Losing the 50/50...', 'Punching some trees...']
+export const LOADING_MESSAGES = ['Losing the 50/50...', 'Punching some trees...', 'Planting the spike...']
