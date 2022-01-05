@@ -192,11 +192,6 @@ export class UserCommand extends Command {
 		let subjectMatch = subjects[0][1]
 		if (subjectMatch in laymanMappings) subjectMatch = laymanMappings[subjectMatch]
 
-		const courses = Object.keys(catalog[subjectMatch])
-			.map((catalogCourse: string) => [jaroWinkler(course, catalogCourse), catalogCourse] as [number, string])
-			.sort(([a0, a1], [b0, b1]) => b0 - a0 || a1.localeCompare(b1))
-			.slice(0, 5)
-
 		const embeds: MessageEmbed[] = []
 
 		if (!(subject in laymanMappings) && subject !== subjectMatch) {
@@ -204,6 +199,10 @@ export class UserCommand extends Command {
 		}
 
 		if (!(course in catalog[subjectMatch])) {
+			const courses = Object.keys(catalog[subjectMatch])
+				.map((catalogCourse: string) => [jaroWinkler(course, catalogCourse), catalogCourse] as [number, string])
+				.sort(([a0, a1], [b0, b1]) => b0 - a0 || a1.localeCompare(b1))
+				.slice(0, 5)
 			embeds.unshift(getSuggestionsEmbed(`Course \`${course}\` not found in subject \`${subjectMatch}\``, courses, ERROR_RED))
 			return await loadingMessage.edit({ embeds: embeds })
 		}
