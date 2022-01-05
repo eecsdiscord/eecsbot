@@ -173,22 +173,15 @@ export class UserCommand extends Command {
 	}
 
 	async messageRun(message: Message, args: Args): Promise<Message> {
-		const subject = await args
-			.pick('string')
-			.then((subject) => subject.toUpperCase())
-			.catch(() => {
-				throw HELP_ERROR
-			})
-		if (subject === 'REFRESH' && isMod(message.author.id)) {
+		const parsedArgs = await args.repeat('string').catch(() => {
+			throw HELP_ERROR
+		})
+		if (parsedArgs.length < 2) throw HELP_ERROR
+		if (parsedArgs[0] === 'REFRESH' && isMod(message.author.id)) {
 			return await message.channel.send((await getCatalog()) ? 'Course catalog refreshed!' : 'Error fetching course catalog!')
 		}
-		const course = await args
-			.pick('string')
-			.then((course) => course.toUpperCase())
-			.catch(() => {
-				throw HELP_ERROR
-			})
-		if (!args.finished) throw HELP_ERROR
+		const subject = parsedArgs.slice(0, -1).join(' ').toUpperCase()
+		const course = parsedArgs[parsedArgs.length - 1].toUpperCase()
 
 		const loadingMessage = await sendLoadingMessage(message)
 
@@ -200,7 +193,7 @@ export class UserCommand extends Command {
 		let subjectMatch = subjects[0][1]
 		if (subjectMatch in laymanMappings) subjectMatch = laymanMappings[subjectMatch]
 
-		if (!catalog[subjectMatch][course]) {
+		if (!(course in catalog[subjectMatch])) {
 			return await loadingMessage.edit({
 				embeds: [
 					new MessageEmbed({ description: `Course \`${course}\` not found in subject \`${subjectMatch}\``, color: ERROR_RED }),
@@ -260,7 +253,6 @@ export class UserCommand extends Command {
 			]
 
 			if (!(subject in laymanMappings) && subject !== subjectMatch) {
-				console.log(subject, subjectMatch)
 				embeds.push(getSuggestionsEmbed(subject, subjects))
 			}
 
