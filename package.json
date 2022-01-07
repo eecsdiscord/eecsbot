@@ -22,12 +22,14 @@
     "colorette": "^2.0.16",
     "discord.js": "^13.5.0",
     "dotenv": "^10.0.0",
+    "node-cron": "^3.0.0",
     "nodemailer": "^6.7.2"
   },
   "devDependencies": {
     "@sapphire/prettier-config": "^1.2.7",
     "@sapphire/ts-config": "^3.1.6",
     "@types/better-sqlite3": "^7.4.2",
+    "@types/node-cron": "^3.0.1",
     "@types/nodemailer": "^6.4.4",
     "husky": "^7.0.4",
     "prettier": "^2.5.1",
