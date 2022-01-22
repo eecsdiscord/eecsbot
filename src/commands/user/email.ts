@@ -11,7 +11,7 @@ const HELP_ERROR = new UserError({
 })
 
 /**
- * Extracts the bMail username from an email. Removes periods, ignores + extensions, and lowercases
+ * Extracts the bMail username from an email. Ignores + extensions and lowercases
  * @param email Email string
  */
 function extractbMailUsername(email: string): string {
@@ -20,7 +20,7 @@ function extractbMailUsername(email: string): string {
 	const [username, domain] = splitted
 	if (domain !== BMAIL_DOMAIN) return ''
 
-	return username.replaceAll('.', '').split('+')[0].toLowerCase()
+	return username.split('+')[0].toLowerCase()
 }
 
 export class UserCommand extends Command {
