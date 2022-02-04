@@ -1,10 +1,10 @@
-import { container } from '@sapphire/framework'
+import { container, UserError } from '@sapphire/framework'
 import { green, red } from 'colorette'
 import crypto from 'crypto'
-import type { User } from 'discord.js'
+import { MessageEmbed, User } from 'discord.js'
 import nodemailer from 'nodemailer'
 
-import { BMAIL_DOMAIN } from './constants'
+import { BMAIL_DOMAIN, ERROR_RED, SUCCESS_GREEN } from './constants'
 import { db } from './database'
 
 export const codes: { [key: string]: Verification } = {}
@@ -12,6 +12,24 @@ export const codes: { [key: string]: Verification } = {}
 interface Verification {
 	code: number
 	hash: string
+}
+
+export const HELP_ERROR = new UserError({
+	identifier: 'ArgumentError',
+	context: { help: true, helpMessage: 'Please enter a valid Berkeley email! Example: `$email foo@berkeley.edu`' }
+})
+
+/**
+ * Extracts the bMail username from an email. Ignores + extensions and lowercases
+ * @param email Email string
+ */
+export function extractbMailUsername(email: string): string {
+	const splitted = email.split('@')
+	if (splitted.length !== 2) return ''
+	const [username, domain] = splitted
+	if (domain !== BMAIL_DOMAIN) return ''
+
+	return username.split('+')[0].toLowerCase()
 }
 
 let transporter: nodemailer.Transporter
@@ -79,4 +97,24 @@ export function verifyCode(author: User, code: number): boolean {
 		}
 	}
 	return false
+}
+
+export function checkEmail(bMailUsername: string): MessageEmbed {
+	const email = `${bMailUsername}@${BMAIL_DOMAIN}`
+	if (!process.env.PEPPER) throw 'PEPPER environment variable missing!'
+	const hash = crypto
+		.createHash('sha256')
+		.update(process.env.PEPPER + email)
+		.digest('hex')
+	const row = db.prepare('SELECT * FROM verification_hashes WHERE hash = ?').get(hash)
+
+	return row
+		? new MessageEmbed({
+				title: 'Email was verified before!',
+				description: `Email \`${bMailUsername[0]}${bMailUsername
+					.slice(1)
+					.replaceAll(/[^\.]/g, '*')}@${BMAIL_DOMAIN}\` was verified on ${new Date(row.timestamp).toLocaleString()}`,
+				color: SUCCESS_GREEN
+		  })
+		: new MessageEmbed({ title: 'Email was never verified!', color: ERROR_RED })
 }

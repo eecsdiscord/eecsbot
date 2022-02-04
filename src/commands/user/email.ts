@@ -1,27 +1,9 @@
-import { Args, Command, UserError } from '@sapphire/framework'
+import { Args, Command } from '@sapphire/framework'
 import { Message, MessageEmbed } from 'discord.js'
 
-import { BMAIL_DOMAIN, ERROR_RED, SUCCESS_GREEN } from '../../lib/constants'
+import { ERROR_RED, SUCCESS_GREEN } from '../../lib/constants'
 import { sendLoadingMessage } from '../../lib/utils'
-import { emailCode } from '../../lib/verification'
-
-const HELP_ERROR = new UserError({
-	identifier: 'ArgumentError',
-	context: { help: true, helpMessage: 'Please enter a valid Berkeley email! Example: `$email foo@berkeley.edu`' }
-})
-
-/**
- * Extracts the bMail username from an email. Ignores + extensions and lowercases
- * @param email Email string
- */
-function extractbMailUsername(email: string): string {
-	const splitted = email.split('@')
-	if (splitted.length !== 2) return ''
-	const [username, domain] = splitted
-	if (domain !== BMAIL_DOMAIN) return ''
-
-	return username.split('+')[0].toLowerCase()
-}
+import { emailCode, extractbMailUsername, HELP_ERROR } from '../../lib/verification'
 
 export class UserCommand extends Command {
 	constructor(context: Command.Context, options: Command.Options) {
