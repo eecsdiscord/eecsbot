@@ -2,7 +2,9 @@ import { container, UserError } from '@sapphire/framework'
 import { green, red } from 'colorette'
 import crypto from 'crypto'
 import { MessageEmbed, User } from 'discord.js'
+import { google } from 'googleapis'
 import nodemailer from 'nodemailer'
+import type SMTPTransport from 'nodemailer/lib/smtp-transport'
 
 import { BMAIL_DOMAIN, ERROR_RED, SUCCESS_GREEN } from './constants'
 import { db } from './database'
@@ -35,10 +37,30 @@ export function extractbMailUsername(email: string): string {
 let transporter: nodemailer.Transporter
 
 export async function initializeNodemailer() {
+	const oauth = new google.auth.OAuth2({
+		clientId: process.env.CLIENT_ID,
+		clientSecret: process.env.CLIENT_SECRET,
+		redirectUri: 'https://developers.google.com/oauthplayground'
+	})
+	oauth.setCredentials({
+		refresh_token: process.env.REFRESH_TOKEN
+	})
+	const accessToken = await oauth.getAccessToken()
+	if (!accessToken.token) {
+		container.logger.error(red('Failed to create OAuth2 Access Token!'))
+	}
+
 	transporter = nodemailer.createTransport({
 		service: 'gmail',
-		auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS }
-	})
+		auth: {
+			type: 'OAuth2',
+			user: process.env.EMAIL,
+			clientId: process.env.CLIENT_ID,
+			clientSecret: process.env.CLIENT_SECRET,
+			refreshToken: process.env.REFRESH_TOKEN,
+			accessToken: accessToken
+		}
+	} as SMTPTransport.Options)
 
 	try {
 		await transporter.verify()
