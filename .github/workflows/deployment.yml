@@ -17,18 +17,14 @@ jobs:
         BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         BOT_OWNER_ID: ${{ secrets.BOT_OWNER_ID }}
         EMAIL: ${{ secrets.EMAIL }}
-        CLIENT_ID: ${{ secrets.CLIENT_ID }}
-        CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-        REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+        PASS: ${{ secrets.PASS }}
         PEPPER: ${{ secrets.PEPPER }}
       run: |
         touch .env
         echo "BOT_TOKEN=$BOT_TOKEN" >> .env
         echo "BOT_OWNER_ID=$BOT_OWNER_ID" >> .env
         echo "EMAIL=$EMAIL" >> .env
-        echo "CLIENT_ID=$CLIENT_ID" >> .env
-        echo "CLIENT_SECRET=$CLIENT_SECRET" >> .env
-        echo "REFRESH_TOKEN=$REFRESH_TOKEN" >> .env
+        echo "PASS=$PASS" >> .env
         echo "PEPPER=$PEPPER" >> .env
 
     - name: Stop eecsbot and rebuild code
