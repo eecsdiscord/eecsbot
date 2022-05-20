@@ -2,7 +2,7 @@ import { container } from '@sapphire/framework'
 import { Guild, Message, MessageEmbed, TextChannel } from 'discord.js'
 
 import { BERKELEY_BLUE, CALIFORNIA_GOLD, LOADING_MESSAGES } from './constants'
-import { GUILD_ID, MOD_ROLE_ID, STDOUT_CHANNEL_ID } from './discordConfig'
+import { DEPRECATED_MOD_ROLE_ID, GUILD_ID, MOD_ROLE_ID, STDOUT_CHANNEL_ID } from './discordConfig'
 
 /**
  * Returns the Guild
@@ -35,7 +35,10 @@ export function getSTDOUT(): TextChannel {
  * @param id Discord id of the user
  */
 export function isMod(id: string): boolean {
-	return Boolean(getGuild().members.resolve(id)?.roles.resolve(MOD_ROLE_ID))
+	return (
+		Boolean(getGuild().members.resolve(id)?.roles.resolve(MOD_ROLE_ID)) ||
+		Boolean(getGuild().members.resolve(id)?.roles.resolve(DEPRECATED_MOD_ROLE_ID))
+	)
 }
 
 /**
