@@ -19,6 +19,11 @@ export const HELP_ERROR = new UserError({
 	context: { help: true, helpMessage: 'Please enter a valid Berkeley email! Example: `$email foo@berkeley.edu`' }
 })
 
+export const VCHECK_HELP_ERROR = new UserError({
+	identifier: 'ArgumentError',
+	context: { help: true, helpMessage: 'Please enter a valid Berkeley email! Example: `$vcheck foo@berkeley.edu`' }
+})
+
 /**
  * Extracts the bMail username from an email. Ignores + extensions and lowercases
  * @param email Email string
