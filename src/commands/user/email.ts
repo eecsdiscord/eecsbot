@@ -26,9 +26,14 @@ export class UserCommand extends Command {
 					? new MessageEmbed({
 							title: 'Email sent!',
 							description:
-								`Verification code successfully sent for \`${message.author.tag}\`\n\n` +
+								`Verification code successfully sent for \`${message.author.tag}\`\n` +
+								'\n' +
 								'Once you receive your temporary verification code, please verify using\n' +
-								`\`$code ******\``,
+								`\`$code ******\`\n` +
+								'\n' +
+								'Not receiving your email? Dots __**do**__ matter for school Gmail addresses:\n' +
+								'https://support.google.com/mail/answer/7436150\n' +
+								'There are other reasons as well, message a mod if you are having trouble!',
 							color: SUCCESS_GREEN
 					  })
 					: new MessageEmbed({ title: 'Error sending email!', color: ERROR_RED })
