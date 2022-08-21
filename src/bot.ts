@@ -5,17 +5,11 @@ import './lib/init'
 const client = new SapphireClient({
 	typing: true,
 	defaultPrefix: '$',
-	intents: [
-		'GUILDS',
-		'GUILD_MESSAGES',
-		'DIRECT_MESSAGES'
-		// 'GUILD_MESSAGE_REACTIONS',
-		// 'DIRECT_MESSAGE_REACTIONS',
-		// 'GUILD_EMOJIS_AND_STICKERS'
-	],
+	intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'],
 	partials: ['CHANNEL'],
 	logger: { level: LogLevel.Debug },
-	loadDefaultErrorListeners: false
+	loadDefaultErrorListeners: false,
+	loadMessageCommandListeners: true
 })
 
 const main = async () => {

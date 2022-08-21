@@ -4,7 +4,7 @@ import type { Message } from 'discord.js'
 import { isMod } from '../lib/utils'
 
 export class UserPrecondition extends Precondition {
-	run(message: Message): PreconditionResult {
+	messageRun(message: Message): PreconditionResult {
 		return isMod(message.author.id) ? this.ok() : this.error({ context: { silent: true } })
 	}
 }

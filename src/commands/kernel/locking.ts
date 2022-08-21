@@ -1,5 +1,5 @@
 import { Args, UserError } from '@sapphire/framework'
-import { SubCommandPluginCommand } from '@sapphire/plugin-subcommands'
+import { Subcommand } from '@sapphire/plugin-subcommands'
 import { CategoryChannel, Message, MessageEmbed, Permissions, TextChannel } from 'discord.js'
 
 import { BERKELEY_BLUE, CALIFORNIA_GOLD } from '../../lib/constants'
@@ -78,13 +78,17 @@ async function lockAcquireOrRelease(message: Message, args: Args, acquire: boole
 	return await message.channel.send(`${acquire ? 'Locked' : 'Unlocked'} ${channel.toString()}`)
 }
 
-export class KernelCommand extends SubCommandPluginCommand {
-	constructor(context: SubCommandPluginCommand.Context, options: SubCommandPluginCommand.Options) {
+export class KernelCommand extends Subcommand {
+	constructor(context: Subcommand.Context, options: Subcommand.Options) {
 		super(context, {
 			...options,
 			name: 'lock',
 			preconditions: ['GuildOnly', ['isTA', 'isMod']],
-			subCommands: [{ input: 'list', default: true }, 'acquire', 'release']
+			subcommands: [
+				{ name: 'list', messageRun: 'list', default: true },
+				{ name: 'acquire', messageRun: 'acquire' },
+				{ name: 'release', messageRun: 'release' }
+			]
 		})
 	}
 
