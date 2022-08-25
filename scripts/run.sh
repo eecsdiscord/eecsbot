@@ -2,4 +2,7 @@
 source ~/.nvm/nvm.sh
 nvm use || nvm install
 
+! nvm install-latest-npm
+! nvm alias default node
+
 exec npm run serve
