@@ -12,7 +12,16 @@ jobs:
       SSH_USERNAME: eecsdiscord
       SSH_PORT: 22
     steps:
-    - name: Create .env file
+    - name: Stop eecsbot
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        port: ${{ env.SSH_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: systemctl --user stop eecsbot
+
+    - name: Generate .env
       env:
         BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
         BOT_OWNER_ID: ${{ secrets.BOT_OWNER_ID }}
@@ -20,44 +29,47 @@ jobs:
         PASS: ${{ secrets.PASS }}
         PEPPER: ${{ secrets.PEPPER }}
       run: |
-        touch .env
-        echo "BOT_TOKEN=$BOT_TOKEN" >> .env
-        echo "BOT_OWNER_ID=$BOT_OWNER_ID" >> .env
-        echo "EMAIL=$EMAIL" >> .env
-        echo "PASS=$PASS" >> .env
-        echo "PEPPER=$PEPPER" >> .env
+        cat << EOF >> .env
+        BOT_TOKEN=$BOT_TOKEN
+        BOT_OWNER_ID=$BOT_OWNER_ID
+        EMAIL=$EMAIL
+        PASS=$PASS
+        PEPPER=$PEPPER
+        EOF
 
-    - name: Stop eecsbot and rebuild code
-      uses: appleboy/ssh-action@master
+    - name: SCP .env
+      uses: appleboy/scp-action@v0.1.3
       with:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ env.SSH_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: ".env"
+        target: "./eecsbot/"
+
+    - name: Build eecsbot
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ env.SSH_HOST }}
+        username: ${{ env.SSH_USERNAME }}
+        port: ${{ env.SSH_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          systemctl --user stop eecsbot
           cd ./eecsbot
           git fetch origin master
           git reset --hard origin/master
+          nvm use || nvm install
+          nvm install-latest-npm
+          nvm alias default node
           rm -rf node_modules
           npm ci
           npm run build
 
-    - name: Update .env
-      uses: appleboy/scp-action@master
-      with:
-        host: ${{ env.SSH_HOST }}
-        username: ${{ env.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        port: ${{ env.SSH_PORT }}
-        source: ".env"
-        target: "./eecsbot/"
-
     - name: Start eecsbot
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v0.1.5
       with:
         host: ${{ env.SSH_HOST }}
         username: ${{ env.SSH_USERNAME }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: ${{ env.SSH_PORT }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: systemctl --user start eecsbot
