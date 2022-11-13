@@ -61,7 +61,7 @@ export async function initializeNodemailer() {
 
 export async function emailCode(author: User, bMailUsername: string): Promise<boolean> {
 	let success = false
-	const code = Math.floor(Math.random() * 1_000_000)
+	const code = Math.floor(Math.random() * 900_000 + 100_000)
 	const email = `${bMailUsername}@${BMAIL_DOMAIN}`
 	try {
 		if (!process.env.PEPPER) throw 'PEPPER environment variable missing!'
