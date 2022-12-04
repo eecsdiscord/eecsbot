@@ -35,7 +35,8 @@ export class UserCommand extends Command {
 							description:
 								`User \`${message.author.tag}\` has been verified!\n\n` +
 								'Please flair your status and pick the classes you want to see in `#roles`\n' +
-								'If you plan on leaving and rejoining at a later date, please ping a mod to let us know!',
+								'If you plan on leaving and rejoining at a later date, please send a message in a verified channel! ' +
+								'This makes reverifying much easier for the mod team.',
 							color: SUCCESS_GREEN
 					  })
 					: new MessageEmbed({ title: 'Error verifying code!', color: ERROR_RED })
