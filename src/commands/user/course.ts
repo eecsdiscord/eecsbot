@@ -223,7 +223,7 @@ export class UserCommand extends Command {
 			let lastUpdated = 'Unknown'
 			if (last_enrollment_update) {
 				const date = new Date(last_enrollment_update)
-				lastUpdated = `${date.getMonth()}/${date.getDay()}/${date.getFullYear()}`
+				lastUpdated = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
 			}
 
 			embeds.unshift(

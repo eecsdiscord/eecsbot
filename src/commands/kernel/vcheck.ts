@@ -10,6 +10,8 @@ export class KernelCommand extends Command {
 	}
 
 	async messageRun(message: Message, args: Args) {
+		await message.delete()
+
 		const email = await args.pick('string').catch(() => {
 			throw VCHECK_HELP_ERROR
 		})
@@ -18,8 +20,6 @@ export class KernelCommand extends Command {
 
 		const loadingMessage = await sendLoadingMessage(message)
 		const resultEmbed = checkEmail(bMailUsername)
-
-		await message.delete()
 
 		return await loadingMessage.edit({
 			embeds: [
