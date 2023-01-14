@@ -2,7 +2,7 @@ import { fetch } from '@sapphire/fetch'
 import { Args, Command, container, UserError } from '@sapphire/framework'
 import { jaroWinkler } from '@skyra/jaro-winkler'
 import { green } from 'colorette'
-import { HexColorString, Message, MessageEmbed } from 'discord.js'
+import { EmbedBuilder, Message } from 'discord.js'
 
 import { BERKELEY_BLUE, CALIFORNIA_GOLD, ERROR_RED } from '../../lib/constants'
 import { isMod, sendLoadingMessage } from '../../lib/utils'
@@ -150,8 +150,8 @@ export async function getCatalog(): Promise<boolean> {
  * @param entries jaroWinkler entries
  * @param color Color for the embed
  */
-function getSuggestionsEmbed(message: string, entries: [number, string][], color: HexColorString): MessageEmbed {
-	return new MessageEmbed({
+function getSuggestionsEmbed(message: string, entries: [number, string][], color: number): EmbedBuilder {
+	return new EmbedBuilder({
 		description: `${message}, did you mean:\n${entries.map((entry) => `\`${entry[1]}\``).join(' | ')}`,
 		color: color
 	})
@@ -192,7 +192,7 @@ export class UserCommand extends Command {
 		let subjectMatch = subjects[0][1]
 		if (subjectMatch in laymanMappings) subjectMatch = laymanMappings[subjectMatch]
 
-		const embeds: MessageEmbed[] = []
+		const embeds: EmbedBuilder[] = []
 
 		if (!(subject in laymanMappings) && subject !== subjectMatch) {
 			embeds.push(getSuggestionsEmbed(`Couldn't find an exact match for subject \`${subject}\``, subjects, CALIFORNIA_GOLD))
@@ -227,7 +227,7 @@ export class UserCommand extends Command {
 			}
 
 			embeds.unshift(
-				new MessageEmbed({
+				new EmbedBuilder({
 					color: BERKELEY_BLUE,
 					title: `${subjectMatch} ${course}`,
 					url: `https://berkeleytime.com/catalog/${subjectMatch}/${course}/`.replace(' ', '%20'),
@@ -260,7 +260,7 @@ export class UserCommand extends Command {
 			return await loadingMessage.edit({ embeds: embeds })
 		} catch (error) {
 			container.logger.error(error)
-			return await loadingMessage.edit({ embeds: [new MessageEmbed({ title: 'Error fetching course data!', color: ERROR_RED })] })
+			return await loadingMessage.edit({ embeds: [new EmbedBuilder({ title: 'Error fetching course data!', color: ERROR_RED })] })
 		}
 	}
 }

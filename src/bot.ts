@@ -1,12 +1,20 @@
 import { LogLevel, SapphireClient } from '@sapphire/framework'
+import { GatewayIntentBits, Partials } from 'discord.js'
 
 import './lib/init'
 
 const client = new SapphireClient({
 	typing: true,
 	defaultPrefix: '$',
-	intents: ['GUILDS', 'GUILD_MESSAGES', 'DIRECT_MESSAGES'],
-	partials: ['CHANNEL'],
+	intents: [
+		// https://discord.com/developers/docs/topics/gateway#gateway-intents
+		GatewayIntentBits.Guilds, // Server, channels, and roles
+		GatewayIntentBits.GuildMembers, // Member roles
+		GatewayIntentBits.GuildMessages, // Messages
+		GatewayIntentBits.DirectMessages, // Direct messages
+		GatewayIntentBits.MessageContent // Content for message commands
+	],
+	partials: [Partials.Channel],
 	logger: { level: LogLevel.Debug },
 	loadDefaultErrorListeners: false,
 	loadMessageCommandListeners: true

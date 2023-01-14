@@ -1,5 +1,5 @@
 import { Args, Command } from '@sapphire/framework'
-import { Message, MessageEmbed } from 'discord.js'
+import { EmbedBuilder, Message } from 'discord.js'
 
 import { ERROR_RED, SUCCESS_GREEN } from '../../lib/constants'
 import { sendLoadingMessage } from '../../lib/utils'
@@ -23,7 +23,7 @@ export class UserCommand extends Command {
 		return await loadingMessage.edit({
 			embeds: [
 				result
-					? new MessageEmbed({
+					? new EmbedBuilder({
 							title: 'Email sent!',
 							description:
 								`Verification code successfully sent for \`${message.author.tag}\`\n` +
@@ -36,7 +36,7 @@ export class UserCommand extends Command {
 								'There are other reasons as well, message a mod if you are having trouble!',
 							color: SUCCESS_GREEN
 					  })
-					: new MessageEmbed({ title: 'Error sending email!', color: ERROR_RED })
+					: new EmbedBuilder({ title: 'Error sending email!', color: ERROR_RED })
 			]
 		})
 	}
