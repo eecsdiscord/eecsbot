@@ -25,7 +25,7 @@ export class KernelCommand extends Command {
 			embeds: [
 				resultEmbed.setAuthor({
 					name: message.author.username,
-					iconURL: message.member?.displayAvatarURL({ dynamic: true }) ?? message.author.displayAvatarURL({ dynamic: true })
+					iconURL: message.member?.displayAvatarURL() ?? message.author.displayAvatarURL()
 				})
 			]
 		})

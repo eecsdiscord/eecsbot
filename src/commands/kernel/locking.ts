@@ -1,6 +1,6 @@
 import { Args, UserError } from '@sapphire/framework'
 import { Subcommand } from '@sapphire/plugin-subcommands'
-import { CategoryChannel, Message, MessageEmbed, Permissions, TextChannel } from 'discord.js'
+import { EmbedBuilder, CategoryChannel, Message, PermissionsBitField, TextChannel } from 'discord.js'
 
 import { BERKELEY_BLUE, CALIFORNIA_GOLD } from '../../lib/constants'
 import { CLASS_CATEGORY_CHANNEL_IDS } from '../../lib/discordConfig'
@@ -41,7 +41,7 @@ function getCourseCategories(): CategoryChannel[] {
  * @param channel Discord Guild Channel
  */
 function isLocked(channel: TextChannel): boolean {
-	return channel.permissionOverwrites.resolve(getGuild().roles.everyone.id)?.deny.has(Permissions.FLAGS.SEND_MESSAGES) || false
+	return channel.permissionOverwrites.resolve(getGuild().roles.everyone.id)?.deny.has(PermissionsBitField.Flags.SendMessages) || false
 }
 
 /**
@@ -54,7 +54,7 @@ async function lockAcquireOrRelease(message: Message, args: Args, acquire: boole
 		throw HELP_ACQUIRE_RELEASE_ERROR
 	})
 	if (!args.finished) throw HELP_ACQUIRE_RELEASE_ERROR
-	if (!guildChannel.isText() || !getCourseCategories().some((category: CategoryChannel) => category.children.has(guildChannel.id)))
+	if (!guildChannel.isTextBased() || !getCourseCategories().some((category: CategoryChannel) => category.children.cache.has(guildChannel.id)))
 		throw HELP_INVALID_CHANNEL_ERROR(guildChannel.toString())
 
 	const channel = guildChannel as TextChannel
@@ -63,11 +63,11 @@ async function lockAcquireOrRelease(message: Message, args: Args, acquire: boole
 
 	const stdoutChannel = getSTDOUT()
 
-	channel.permissionOverwrites.edit(getGuild().roles.everyone, { SEND_MESSAGES: acquire ? false : null })
+	channel.permissionOverwrites.edit(getGuild().roles.everyone, { SendMessages: acquire ? false : null })
 
 	await stdoutChannel.send({
 		embeds: [
-			new MessageEmbed({
+			new EmbedBuilder({
 				title: `Lock ${acquire ? 'acquired' : 'released'}!`,
 				description: `__**Resource:**__ ${channel.toString()}`,
 				color: acquire ? CALIFORNIA_GOLD : BERKELEY_BLUE
@@ -96,9 +96,9 @@ export class KernelCommand extends Subcommand {
 		if (!args.finished) throw HELP_LIST_ERROR
 		const categories: string[] = []
 		getCourseCategories().forEach((category: CategoryChannel) => {
-			const lockedChannels = category.children
+			const lockedChannels = category.children.cache
 				.sorted((a, b) => (a.name.match(COURSE_NUMBER_REGEX)?.[0] || '').localeCompare(b.name.match(COURSE_NUMBER_REGEX)?.[0] || ''))
-				.filter((channel) => channel.isText() && isLocked(channel as TextChannel))
+				.filter((channel) => channel.isTextBased() && isLocked(channel as TextChannel))
 				.map((channel) => channel.toString())
 			if (lockedChannels.length > 0) categories.push(`${category.name}:\n${lockedChannels.join('\n')}`)
 		})

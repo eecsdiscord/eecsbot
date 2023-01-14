@@ -1,5 +1,5 @@
 import { container } from '@sapphire/framework'
-import { Guild, Message, MessageEmbed, TextChannel } from 'discord.js'
+import { EmbedBuilder, Guild, Message, TextChannel } from 'discord.js'
 
 import { BERKELEY_BLUE, CALIFORNIA_GOLD, LOADING_MESSAGES } from './constants'
 import { DEPRECATED_MOD_ROLE_ID, GUILD_ID, MOD_ROLE_ID, STDOUT_CHANNEL_ID } from './discordConfig'
@@ -55,6 +55,6 @@ export function pickRandom<T>(array: T[]): T {
  */
 export async function sendLoadingMessage(message: Message): Promise<Message> {
 	return await message.channel.send({
-		embeds: [new MessageEmbed({ description: pickRandom(LOADING_MESSAGES), color: pickRandom([BERKELEY_BLUE, CALIFORNIA_GOLD]) })]
+		embeds: [new EmbedBuilder({ description: pickRandom(LOADING_MESSAGES), color: pickRandom([BERKELEY_BLUE, CALIFORNIA_GOLD]) })]
 	})
 }

@@ -1,5 +1,5 @@
 import { Args, Command, UserError } from '@sapphire/framework'
-import { Message, MessageEmbed } from 'discord.js'
+import { EmbedBuilder, Message } from 'discord.js'
 
 import { ERROR_RED, SUCCESS_GREEN } from '../../lib/constants'
 import { VERIFIED_ROLE_ID } from '../../lib/discordConfig'
@@ -30,7 +30,7 @@ export class UserCommand extends Command {
 		return await loadingMessage.edit({
 			embeds: [
 				result
-					? new MessageEmbed({
+					? new EmbedBuilder({
 							title: 'Verification Successful!',
 							description:
 								`User \`${message.author.tag}\` has been verified!\n\n` +
@@ -39,7 +39,7 @@ export class UserCommand extends Command {
 								'This makes reverifying much easier for the mod team.',
 							color: SUCCESS_GREEN
 					  })
-					: new MessageEmbed({ title: 'Error verifying code!', color: ERROR_RED })
+					: new EmbedBuilder({ title: 'Error verifying code!', color: ERROR_RED })
 			]
 		})
 	}

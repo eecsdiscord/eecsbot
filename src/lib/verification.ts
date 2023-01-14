@@ -1,7 +1,7 @@
 import { container, UserError } from '@sapphire/framework'
 import { green, red } from 'colorette'
 import crypto from 'crypto'
-import { MessageEmbed, User } from 'discord.js'
+import { EmbedBuilder, User } from 'discord.js'
 import nodemailer from 'nodemailer'
 
 import { BMAIL_DOMAIN, ERROR_RED, SUCCESS_GREEN } from './constants'
@@ -109,7 +109,7 @@ export function verifyCode(author: User, code: number): boolean {
 	return false
 }
 
-export function checkEmail(bMailUsername: string): MessageEmbed {
+export function checkEmail(bMailUsername: string): EmbedBuilder {
 	const email = `${bMailUsername}@${BMAIL_DOMAIN}`
 	if (!process.env.PEPPER) throw 'PEPPER environment variable missing!'
 	const hash = crypto
@@ -119,12 +119,12 @@ export function checkEmail(bMailUsername: string): MessageEmbed {
 	const row = db.prepare('SELECT * FROM verification_hashes WHERE hash = ?').get(hash)
 
 	return row
-		? new MessageEmbed({
+		? new EmbedBuilder({
 				title: 'Email was verified before!',
 				description: `Email \`${bMailUsername[0]}${bMailUsername
 					.slice(1)
 					.replaceAll(/[^\.]/g, '*')}@${BMAIL_DOMAIN}\` was verified on ${new Date(row.timestamp).toLocaleString()}`,
 				color: SUCCESS_GREEN
 		  })
-		: new MessageEmbed({ title: 'Email was never verified!', color: ERROR_RED })
+		: new EmbedBuilder({ title: 'Email was never verified!', color: ERROR_RED })
 }
