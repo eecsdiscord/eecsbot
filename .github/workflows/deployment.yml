@@ -62,7 +62,7 @@ jobs:
           nvm install-latest-npm
           nvm alias default node
           rm -rf node_modules
-          npm ci
+          npm ci --python=python3.7
           npm run build
 
     - name: Start eecsbot
