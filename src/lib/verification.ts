@@ -116,7 +116,7 @@ export function checkEmail(bMailUsername: string): EmbedBuilder {
 		.createHash('sha256')
 		.update(process.env.PEPPER + email)
 		.digest('hex')
-	const row = db.prepare('SELECT * FROM verification_hashes WHERE hash = ?').get(hash)
+	const row = db.prepare('SELECT * FROM verification_hashes WHERE hash = ?').get(hash) as { timestamp: Date }
 
 	return row
 		? new EmbedBuilder({
