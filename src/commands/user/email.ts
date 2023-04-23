@@ -36,7 +36,11 @@ export class UserCommand extends Command {
 								'There are other reasons as well, message a mod if you are having trouble!',
 							color: SUCCESS_GREEN
 					  })
-					: new EmbedBuilder({ title: 'Error sending email!', color: ERROR_RED })
+					: new EmbedBuilder({
+							title: 'Error sending email!',
+							description: "If you've previously used your Berkeley email to verify an account, please message a moderator.",
+							color: ERROR_RED
+					  })
 			]
 		})
 	}
