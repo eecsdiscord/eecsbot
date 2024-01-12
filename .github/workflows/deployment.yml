@@ -28,6 +28,10 @@ jobs:
         EMAIL: ${{ secrets.EMAIL }}
         PASS: ${{ secrets.PASS }}
         PEPPER: ${{ secrets.PEPPER }}
+        OAUTH_EMAIL: ${{ secrets.OAUTH_EMAIL }}
+        OAUTH_CLIENT_ID: ${{ secrets.OAUTH_CLIENT_ID }}
+        OAUTH_CLIENT_SECRET: ${{ secrets.OAUTH_CLIENT_SECRET }}
+        OAUTH_REFRESH_TOKEN: ${{ secrets.OAUTH_REFRESH_TOKEN }}
       run: |
         cat << EOF >> .env
         BOT_TOKEN=$BOT_TOKEN
@@ -35,6 +39,10 @@ jobs:
         EMAIL=$EMAIL
         PASS=$PASS
         PEPPER=$PEPPER
+        OAUTH_EMAIL=$OAUTH_EMAIL
+        OAUTH_CLIENT_ID=$OAUTH_CLIENT_ID
+        OAUTH_CLIENT_SECRET=$OAUTH_CLIENT_SECRET
+        OAUTH_REFRESH_TOKEN=$OAUTH_REFRESH_TOKEN
         EOF
 
     - name: SCP .env

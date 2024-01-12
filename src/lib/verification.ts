@@ -41,13 +41,20 @@ let transporter: nodemailer.Transporter
 
 export async function initializeNodemailer() {
 	transporter = nodemailer.createTransport({
-		host: 'smtp.ocf.berkeley.edu',
-		port: 587,
-		secure: false,
+		host: 'smtp.gmail.com',
+		port: 465,
+		secure: true,
 		auth: {
-			user: process.env.EMAIL,
-			pass: process.env.PASS
+			type: 'OAuth2',
+			user: process.env.OAUTH_EMAIL,
+			clientId: process.env.OAUTH_CLIENT_ID,
+			clientSecret: process.env.OAUTH_CLIENT_SECRET,
+			refreshToken: process.env.OAUTH_REFRESH_TOKEN
 		}
+	})
+
+	transporter.on('token', (token) => {
+		container.logger.info(green(`Access token refreshed, expires ${(token.expires - Date.now()) / 1000} seconds from now!`))
 	})
 
 	try {
@@ -74,7 +81,7 @@ export async function emailCode(author: User, bMailUsername: string): Promise<bo
 		if (row) throw `Duplicate email submitted by user ${author.tag}`
 
 		await transporter.sendMail({
-			from: 'bot@eecsdiscord.berkeley.edu',
+			from: process.env.OAUTH_EMAIL,
 			to: email,
 			subject: 'EECS Discord Verification Code',
 			text: `Please use the code ${code} to complete your verification. This code will expire in 5 minutes!`
