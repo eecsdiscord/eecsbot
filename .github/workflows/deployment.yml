@@ -67,7 +67,6 @@ jobs:
           git fetch origin master
           git reset --hard origin/master
           nvm use || nvm install
-          nvm install-latest-npm
           nvm alias default node
           rm -rf node_modules
           npm ci --python=python3.7
